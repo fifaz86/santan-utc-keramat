@@ -18,9 +18,8 @@ export default function App() {
   const [cart, setCart] = useState<{ [variantId: string]: number }>({});
   const [custName, setCustName] = useState('');
   const [custPhone, setCustPhone] = useState('');
-  const [fulfillment, setFulfillment] = useState<'pickup' | 'delivery'>(
-    'pickup'
-  );
+  const [fulfillment, setFulfillment] = useState<'pickup' | 'delivery'>('pickup');
+  const [paymentChoice, setPaymentChoice] = useState<'qr' | 'later'>('qr');
   const [deliveryAddr, setDeliveryAddr] = useState('');
   const [deliveryKm, setDeliveryKm] = useState('');
   const [orderNotes, setOrderNotes] = useState('');
@@ -240,9 +239,15 @@ export default function App() {
     if (error) {
       alert('Ralat menghantar tempahan: ' + error.message);
     } else {
-      setOrderSuccess(data);
-      setCart({});
-      setOrderNotes('');
+      setOrderSuccess({
+        ...data,
+        customer_phone: custPhone,
+        customer_name: custName,
+        payment_choice: paymentChoice,
+        fulfillment_type: fulfillment
+      })
+      setCart({})
+      setOrderNotes('')
     }
   }
 
@@ -675,6 +680,28 @@ export default function App() {
               }}
             >
               Buat Tempahan Baharu
+              <button
+              type="button"
+              onClick={() => {
+                let phone = (orderSuccess.customer_phone || '').replace(/[^0-9]/g, '')
+                if (phone.startsWith('0')) phone = '6' + phone
+                const isPaid = orderSuccess.fulfillment_type === 'pickup' && orderSuccess.payment_choice === 'qr'
+                const payStatus = isPaid ? 'SUDAH BAYAR (DuitNow QR) ✅' : 'BELUM BAYAR ⏳'
+                const msgText = `*SANTAN UTC KERAMAT*\nNo. Rujukan: *${orderSuccess.order_number}*\nNama: ${orderSuccess.customer_name}\nJumlah: *RM ${Number(orderSuccess.total_amount).toFixed(2)}*\nStatus: *${payStatus}*`
+                window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msgText)}`, '_blank')
+              }}
+              style={{ padding: '0.6rem 1rem', background: '#25D366', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', marginRight: '0.5rem' }}
+            >
+              💬 Hantar Status ke WhatsApp
+            </button>
+
+            <button
+              onClick={() => setOrderSuccess(null)}
+              style={{ padding: '0.6rem 1rem', background: '#15803d', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer' }}
+            >
+              Buat Tempahan Baharu
+            </button>
+              💬 Hantar Status ke WhatsApp
             </button>
           </div>
         )}
@@ -906,6 +933,20 @@ export default function App() {
                   Penghantaran (Delivery)
                 </label>
               </div>
+              {fulfillment === 'pickup' && (
+                <div style={{ background: '#f0fdf4', padding: '0.8rem', borderRadius: '6px', border: '1px solid #86efac', marginTop: '0.5rem' }}>
+                  <div style={{ display: 'flex', gap: '1rem', marginBottom: '0.5rem', fontSize: '0.9rem' }}>
+                    <label style={{ cursor: 'pointer' }}><input type="radio" checked={paymentChoice === 'qr'} onChange={() => setPaymentChoice('qr')} /> Bayar Sekarang (DuitNow QR)</label>
+                    <label style={{ cursor: 'pointer' }}><input type="radio" checked={paymentChoice === 'later'} onChange={() => setPaymentChoice('later')} /> Bayar Waktu Ambil</label>
+                  </div>
+                  {paymentChoice === 'qr' && storeInfo.payment_qr_url && (
+                    <div style={{ textAlign: 'center', background: 'white', padding: '0.8rem', borderRadius: '6px' }}>
+                      <div style={{ fontWeight: 'bold', color: '#15803d', marginBottom: '0.4rem' }}>Jumlah: RM {grandTotal.toFixed(2)}</div>
+                      <img src={storeInfo.payment_qr_url} alt="DuitNow QR" style={{ width: '180px', borderRadius: '6px' }} />
+                    </div>
+                  )}
+                </div>
+              )}
               {fulfillment === 'delivery' && (
                 <div
                   style={{
