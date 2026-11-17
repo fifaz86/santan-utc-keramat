@@ -941,7 +941,8 @@ export default function App() {
                     </div>
                   )}
                 </div>
-              )}
+                )}
+              {fulfillment === 'delivery' && (
                 <div
                   style={{
                     display: 'flex',
@@ -973,7 +974,7 @@ export default function App() {
                     style={{ padding: '0.5rem' }}
                   />
                 </div>
-              )
+              )}
               <input
                 type="text"
                 placeholder="Catatan tambahan (cth: waktu ambil / perah pekat)"
