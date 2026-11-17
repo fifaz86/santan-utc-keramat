@@ -664,62 +664,38 @@ export default function App() {
               </div>
             )}
 
-            <p style={{ margin: '0.5rem 0 0.8rem', fontSize: '0.9rem' }}>
-              Pihak kedai akan menyemak dan mengesahkan pesanan anda sebentar
-              lagi.
+<p style={{ margin: '0.5rem 0 0.8rem', fontSize: '0.9rem' }}>
+                Pihak kedai akan menyemak dan mengesahkan pesanan anda sebentar lagi.
+              </p>
               <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center', flexWrap: 'wrap', marginTop: '1rem' }}>
-  <button
-    type="button"
-    onClick={() => {
-      let phone = (orderSuccess.customer_phone || '').replace(/[^0-9]/g, '')
-      if (phone.startsWith('0')) phone = '6' + phone
-      const isPaid = orderSuccess.fulfillment_type === 'pickup' && orderSuccess.payment_choice === 'qr'
-      const payStatus = isPaid ? 'SUDAH BAYAR (DuitNow QR)' : 'BELUM BAYAR'
-      const msgText = `*SANTAN UTC KERAMAT*\nNo. Rujukan: *${orderSuccess.order_number}*\nNama: ${orderSuccess.customer_name}\nJumlah: *RM ${Number(orderSuccess.total_amount).toFixed(2)}*\nStatus: *${payStatus}*`
-      window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msgText)}`, '_blank')
-    }}
-    style={{ padding: '0.6rem 1rem', background: '#25D366', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}
-  >
-    💬 Hantar Status ke WhatsApp
-  </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    let phone = (orderSuccess.customer_phone || '').replace(/[^0-9]/g, '')
+                    if (phone.startsWith('0')) phone = '6' + phone
+                    const isPaid = orderSuccess.fulfillment_type === 'pickup' && orderSuccess.payment_choice === 'qr'
+                    const payStatus = isPaid ? 'SUDAH BAYAR (DuitNow QR)' : 'BELUM BAYAR'
+                    const msgText = `*SANTAN UTC KERAMAT*\nNo. Rujukan: *${orderSuccess.order_number}*\nNama: ${orderSuccess.customer_name}\nJumlah: *RM ${Number(orderSuccess.total_amount).toFixed(2)}*\nStatus: *${payStatus}*`
+                    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msgText)}`, '_blank')
+                  }}
+                  style={{ padding: '0.6rem 1rem', background: '#25D366', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}
+                >
+                  💬 Hantar Status ke WhatsApp
+                </button>
 
-  <button
-    type="button"
-    onClick={() => setOrderSuccess(null)}
-    style={{ padding: '0.6rem 1rem', background: '#15803d', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}
-  >
-    Buat Tempahan Baharu
-  </button>
-</div>
-            >
-              Buat Tempahan Baharu
-              <button
-              type="button"
-              onClick={() => {
-                let phone = (orderSuccess.customer_phone || '').replace(/[^0-9]/g, '')
-                if (phone.startsWith('0')) phone = '6' + phone
-                const isPaid = orderSuccess.fulfillment_type === 'pickup' && orderSuccess.payment_choice === 'qr'
-                const payStatus = isPaid ? 'SUDAH BAYAR (DuitNow QR) ✅' : 'BELUM BAYAR ⏳'
-                const msgText = `*SANTAN UTC KERAMAT*\nNo. Rujukan: *${orderSuccess.order_number}*\nNama: ${orderSuccess.customer_name}\nJumlah: *RM ${Number(orderSuccess.total_amount).toFixed(2)}*\nStatus: *${payStatus}*`
-                window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msgText)}`, '_blank')
-              }}
-              style={{ padding: '0.6rem 1rem', background: '#25D366', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', marginRight: '0.5rem' }}
-            >
-              💬 Hantar Status ke WhatsApp
-            </button>
-
-            <button
-              onClick={() => setOrderSuccess(null)}
-              style={{ padding: '0.6rem 1rem', background: '#15803d', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer' }}
-            >
-              Buat Tempahan Baharu
-            </button>
-              💬 Hantar Status ke WhatsApp
-            </button>
+                <button
+                  type="button"
+                  onClick={() => setOrderSuccess(null)}
+                  style={{ padding: '0.6rem 1rem', background: '#15803d', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}
+                >
+                  Buat Tempahan Baharu
+                </button>
+              </div>
           </div>
         )}
 
-        <h2 style={{ marginTop: '1.5rem', fontSize: '1.2rem' }}>
+        <h2 style={{ marginTop: '1.5rem', fontSize: '1.2rem' }}></h2>
+              <h2 style={{ marginTop: '1.5rem', fontSize: '1.2rem' }}>
           Produk Segar Hari Ini
         </h2>
         <div
@@ -953,20 +929,19 @@ export default function App() {
                     <label style={{ cursor: 'pointer' }}><input type="radio" checked={paymentChoice === 'later'} onChange={() => setPaymentChoice('later')} /> Bayar Waktu Ambil</label>
                   </div>
                   {paymentChoice === 'qr' && (
-  <div style={{ textAlign: 'center', background: 'white', padding: '0.8rem', borderRadius: '6px', marginTop: '0.5rem' }}>
-    <div style={{ fontWeight: 'bold', color: '#15803d', marginBottom: '0.4rem' }}>Sila Imbas & Bayar: RM {grandTotal.toFixed(2)}</div>
-    {storeInfo?.payment_qr_url ? (
-      <img src={storeInfo.payment_qr_url} alt="DuitNow QR" style={{ width: '190px', borderRadius: '6px', border: '1px solid #e5e7eb' }} />
-    ) : (
-      <div style={{ fontSize: '0.85rem', color: '#b45309', padding: '0.5rem', background: '#fef3c7', borderRadius: '4px' }}>
-        (Sila muat naik gambar QR DuitNow dalam panel Log Masuk Staf → Tetapan Kedai)
-      </div>
-    )}
-  </div>
-)}
+                    <div style={{ textAlign: 'center', background: 'white', padding: '0.8rem', borderRadius: '6px', marginTop: '0.5rem' }}>
+                      <div style={{ fontWeight: 'bold', color: '#15803d', marginBottom: '0.4rem' }}>Sila Imbas & Bayar: RM {grandTotal.toFixed(2)}</div>
+                      {storeInfo?.payment_qr_url ? (
+                        <img src={storeInfo.payment_qr_url} alt="DuitNow QR" style={{ width: '190px', borderRadius: '6px', border: '1px solid #e5e7eb' }} />
+                      ) : (
+                        <div style={{ fontSize: '0.85rem', color: '#b45309', padding: '0.5rem', background: '#fef3c7', borderRadius: '4px' }}>
+                          (Sila muat naik gambar QR DuitNow dalam panel Log Masuk Staf → Tetapan Kedai)
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               )}
-              {fulfillment === 'delivery' && (
                 <div
                   style={{
                     display: 'flex',
@@ -998,7 +973,7 @@ export default function App() {
                     style={{ padding: '0.5rem' }}
                   />
                 </div>
-              )}
+              )
               <input
                 type="text"
                 placeholder="Catatan tambahan (cth: waktu ambil / perah pekat)"
