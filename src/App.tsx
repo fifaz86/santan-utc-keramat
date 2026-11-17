@@ -931,17 +931,11 @@ export default function App() {
                   {paymentChoice === 'qr' && (
                     <div style={{ textAlign: 'center', background: 'white', padding: '0.8rem', borderRadius: '6px', marginTop: '0.5rem' }}>
                       <div style={{ fontWeight: 'bold', color: '#15803d', marginBottom: '0.4rem' }}>Sila Imbas & Bayar: RM {grandTotal.toFixed(2)}</div>
-                      {storeInfo?.payment_qr_url ? (
-                        <img src={storeInfo.payment_qr_url} alt="DuitNow QR" style={{ width: '190px', borderRadius: '6px', border: '1px solid #e5e7eb' }} />
-                      ) : (
-                        <div style={{ fontSize: '0.85rem', color: '#b45309', padding: '0.5rem', background: '#fef3c7', borderRadius: '4px' }}>
-                          (Sila muat naik gambar QR DuitNow dalam panel Log Masuk Staf → Tetapan Kedai)
-                        </div>
-                      )}
+                      <img src="/duitnow-qr.jpeg" alt="DuitNow QR" style={{ width: '190px', borderRadius: '6px', border: '1px solid #e5e7eb' }} />
                     </div>
                   )}
                 </div>
-                )}
+              )}
               {fulfillment === 'delivery' && (
                 <div
                   style={{
